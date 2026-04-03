@@ -36,7 +36,9 @@ function extractTitle(content) {
 function addFrontmatter(content, fallbackTitle) {
   if (content.startsWith('---')) return content;
   const title = extractTitle(content) || fallbackTitle;
-  return `---\ntitle: "${title.replace(/"/g, '\\"')}"\n---\n\n${content}`;
+  // Remove the first # heading that matches the title to avoid duplication
+  const body = content.replace(/^#\s+.+\n*/m, '');
+  return `---\ntitle: "${title.replace(/"/g, '\\"')}"\n---\n\n${body}`;
 }
 
 /**
