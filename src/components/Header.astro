@@ -1,0 +1,126 @@
+---
+import config from 'virtual:starlight/user-config';
+import LanguageSelect from 'virtual:starlight/components/LanguageSelect';
+import Search from 'virtual:starlight/components/Search';
+import SiteTitle from 'virtual:starlight/components/SiteTitle';
+import SocialIcons from 'virtual:starlight/components/SocialIcons';
+import ThemeSelect from 'virtual:starlight/components/ThemeSelect';
+
+const shouldRenderSearch =
+	config.pagefind || config.components.Search !== '@astrojs/starlight/components/Search.astro';
+
+const repo = 'zeptodb/zeptodb';
+let stars = '';
+let watchers = '';
+try {
+  const res = await fetch(`https://api.github.com/repos/${repo}`);
+  if (res.ok) {
+    const d = await res.json();
+    const s = d.stargazers_count ?? 0;
+    const w = d.subscribers_count ?? 0;
+    stars = s >= 1000 ? `${(s / 1000).toFixed(1)}k` : String(s);
+    watchers = w >= 1000 ? `${(w / 1000).toFixed(1)}k` : String(w);
+  }
+} catch {}
+---
+
+<div class="header">
+  <div class="title-wrapper sl-flex">
+    <SiteTitle />
+  </div>
+  <div class="sl-flex print:hidden">
+    {shouldRenderSearch && <Search />}
+  </div>
+  <div class="sl-hidden md:sl-flex print:hidden right-group">
+    <div class="sl-flex social-icons">
+      <SocialIcons />
+      {stars && (
+        <div class="gh-stats">
+          <a class="gh-stat" href={`https://github.com/${repo}/stargazers`} target="_blank" rel="noopener" title="Stars">
+            <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.75.75 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25z"/></svg>
+            <span>{stars}</span>
+          </a>
+          <a class="gh-stat" href={`https://github.com/${repo}/watchers`} target="_blank" rel="noopener" title="Watchers">
+            <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor"><path d="M8 2c1.981 0 3.671.992 4.933 2.078 1.27 1.091 2.187 2.345 2.637 3.023a1.62 1.62 0 0 1 0 1.798c-.45.678-1.367 1.932-2.637 3.023C11.67 13.008 9.981 14 8 14s-3.671-.992-4.933-2.078C1.797 10.831.88 9.577.43 8.899a1.62 1.62 0 0 1 0-1.798c.45-.678 1.367-1.932 2.637-3.023C4.33 2.992 6.019 2 8 2ZM1.679 7.932a.12.12 0 0 0 0 .136c.411.622 1.241 1.75 2.366 2.717C5.176 11.758 6.527 12.5 8 12.5s2.825-.742 3.955-1.715c1.124-.967 1.954-2.096 2.366-2.717a.12.12 0 0 0 0-.136c-.412-.621-1.242-1.75-2.366-2.717C10.824 4.242 9.473 3.5 8 3.5s-2.825.742-3.955 1.715c-1.124.967-1.954 2.096-2.366 2.717ZM8 10a2 2 0 1 1-.001-3.999A2 2 0 0 1 8 10Z"/></svg>
+            <span>{watchers}</span>
+          </a>
+        </div>
+      )}
+    </div>
+    <ThemeSelect />
+    <LanguageSelect />
+  </div>
+</div>
+
+<style>
+  @layer starlight.core {
+    .header {
+      display: flex;
+      gap: var(--sl-nav-gap);
+      justify-content: space-between;
+      align-items: center;
+      height: 100%;
+    }
+    .title-wrapper {
+      overflow: clip;
+      padding: 0.25rem;
+      margin: -0.25rem;
+      min-width: 0;
+    }
+    .right-group,
+    .social-icons {
+      gap: 1rem;
+      align-items: center;
+    }
+    .social-icons::after {
+      content: '';
+      height: 2rem;
+      border-inline-end: 1px solid var(--sl-color-gray-5);
+    }
+    @media (min-width: 50rem) {
+      :global(:root[data-has-sidebar]) {
+        --__sidebar-pad: calc(2 * var(--sl-nav-pad-x));
+      }
+      :global(:root:not([data-has-toc])) {
+        --__toc-width: 0rem;
+      }
+      .header {
+        --__sidebar-width: max(0rem, var(--sl-content-inline-start, 0rem) - var(--sl-nav-pad-x));
+        --__main-column-fr: calc(
+          ( 100% + var(--__sidebar-pad, 0rem) - var(--__toc-width, var(--sl-sidebar-width)) -
+            (2 * var(--__toc-width, var(--sl-nav-pad-x))) - var(--sl-content-inline-start, 0rem) -
+            var(--sl-content-width) ) / 2
+        );
+        display: grid;
+        grid-template-columns:
+          minmax(calc(var(--__sidebar-width) + max(0rem, var(--__main-column-fr) - var(--sl-nav-gap))), auto)
+          1fr
+          auto;
+        align-content: center;
+      }
+    }
+  }
+
+  .gh-stats {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+  .gh-stat {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: var(--sl-text-xs, 0.75rem);
+    font-weight: 500;
+    color: var(--sl-color-gray-2);
+    text-decoration: none;
+    font-variant-numeric: tabular-nums;
+    transition: color 0.15s;
+  }
+  .gh-stat:hover {
+    color: var(--sl-color-accent);
+  }
+  .gh-stat svg {
+    flex-shrink: 0;
+  }
+</style>

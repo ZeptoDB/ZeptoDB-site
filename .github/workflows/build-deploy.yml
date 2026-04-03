@@ -1,0 +1,70 @@
+# ZeptoDB-site: Build & Deploy to GitHub Pages
+# Triggered by:
+#   1. Push to main (site code changes)
+#   2. repository_dispatch from ZeptoDB repo (docs changes)
+name: Build & Deploy
+
+on:
+  push:
+    branches: [main]
+  repository_dispatch:
+    types: [docs-updated]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout site repo
+        uses: actions/checkout@v4
+
+      - name: Checkout ZeptoDB docs
+        uses: actions/checkout@v4
+        with:
+          repository: ZeptoDB/ZeptoDB
+          path: zeptodb-source
+          sparse-checkout: docs
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Sync docs from ZeptoDB repo
+        run: node scripts/sync-docs.mjs zeptodb-source/docs
+        env:
+          ZEPTODB_DOCS_PATH: zeptodb-source/docs
+
+      - name: Build site
+        run: npx astro build
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist/
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
