@@ -1,0 +1,103 @@
+---
+title: "Integrations"
+template: splash
+prev: false
+next: false
+description: "ZeptoDB integrations — connect with your existing data stack"
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+## Data Ingestion
+
+<CardGrid>
+  <Card title="Kafka" icon="star">
+    Built-in Kafka consumer with batch ingestion. Up to 3.2M events/sec from Kafka topics.
+
+    [Feed Handler Guide →](/ZeptoDB-site/feeds/feed_handler_guide/)
+  </Card>
+  <Card title="FIX 4.4" icon="star">
+    Native FIX protocol parser for market data feeds. 1.1M messages/sec with 420ns parse latency.
+
+    [Feed Handlers →](/ZeptoDB-site/feeds/feed_handler_complete/)
+  </Card>
+  <Card title="ITCH" icon="star">
+    NASDAQ ITCH protocol handler for L3 order book data.
+
+    [Feed Handlers →](/ZeptoDB-site/feeds/feed_handler_complete/)
+  </Card>
+  <Card title="Binance WebSocket" icon="star">
+    Real-time crypto market data ingestion from Binance exchange.
+
+    [Feed Handlers →](/ZeptoDB-site/feeds/feed_handler_complete/)
+  </Card>
+</CardGrid>
+
+---
+
+## Client Libraries
+
+| Language | Type | Latency | Link |
+|----------|------|---------|------|
+| Python | Zero-copy (NumPy/Pandas) | 522ns | [Python Reference →](/ZeptoDB-site/api/python_reference/) |
+| C++ | Native Pipeline API | Native | [C++ Reference →](/ZeptoDB-site/api/cpp_reference/) |
+| HTTP | REST API (any language) | ~1ms | [HTTP Reference →](/ZeptoDB-site/api/http_reference/) |
+| Arrow Flight | gRPC streaming | ~100μs | [Flight Reference →](/ZeptoDB-site/api/flight_reference/) |
+
+---
+
+## Monitoring & Observability
+
+<CardGrid>
+  <Card title="Prometheus" icon="star">
+    Built-in `/metrics` endpoint. Scrape ingestion rates, query latency, memory usage, and cluster health.
+  </Card>
+  <Card title="Grafana" icon="star">
+    Query ZeptoDB directly from Grafana via HTTP API. Pre-built dashboard templates available.
+  </Card>
+</CardGrid>
+
+---
+
+## Storage & Cloud
+
+| Integration | Status | Description |
+|-------------|--------|-------------|
+| Amazon S3 | ✓ | Parquet HDB for historical data |
+| Google Cloud Storage | ✓ | Parquet HDB |
+| Local NFS | ✓ | On-premise Parquet HDB |
+| Docker | ✓ | Single-command deployment |
+| Kubernetes | ✓ | Helm chart with StatefulSet |
+
+---
+
+## Authentication
+
+| Provider | Protocol | Status |
+|----------|----------|--------|
+| Okta | OIDC | ✓ |
+| Auth0 | OIDC | ✓ |
+| Azure AD | OIDC | ✓ |
+| Google Workspace | OIDC | ✓ |
+| API Keys | Native | ✓ |
+| JWT | Bearer token | ✓ |
+
+See [SSO Integration Guide →](/ZeptoDB-site/api/sso_integration_guide/)
+
+---
+
+## Roadmap Integrations
+
+| Integration | Status | Description |
+|-------------|--------|-------------|
+| MQTT | Planned | IoT sensor ingestion |
+| OPC-UA | Planned | Industrial PLC/SCADA |
+| ROS2 | Planned | Robotics topic subscription |
+| Apache Pulsar | Planned | Streaming alternative to Kafka |
+| AWS Kinesis | Planned | Cloud streaming ingestion |
+| Kafka Connect Sink | Planned | Standard Kafka connector plugin |
+| JDBC/ODBC | Planned | Tableau, Excel, BI tools |
+| CDC (Debezium) | Planned | PostgreSQL/MySQL change capture |
+| DuckDB | Planned | Arrow zero-copy JOIN delegation |
+
+Interested in an integration? [Open an issue on GitHub](https://github.com/zeptodb/zeptodb/issues).

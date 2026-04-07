@@ -1,0 +1,88 @@
+---
+title: "Autonomous Vehicles"
+template: splash
+prev: false
+next: false
+description: "ZeptoDB for driving log replay, sensor time-sync, and autonomous vehicle data pipelines"
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+ASOF JOIN for multi-sensor time sync. Parquet HDB for petabyte-scale driving log replay.
+
+---
+
+## Why AV Teams Choose ZeptoDB
+
+<CardGrid>
+  <Card title="Sensor Time Sync" icon="seti:clock">
+    ASOF JOIN aligns LiDAR, camera, radar, and IMU streams with nanosecond precision.
+  </Card>
+  <Card title="Driving Log Replay" icon="rocket">
+    Query historical driving episodes from Parquet on S3. Replay at original speed or accelerated.
+  </Card>
+  <Card title="Zero-Copy ML" icon="seti:python">
+    522ns from query result to PyTorch tensor for perception model training.
+  </Card>
+  <Card title="Fleet Scale" icon="star">
+    Multi-node cluster handles telemetry from thousands of vehicles simultaneously.
+  </Card>
+</CardGrid>
+
+---
+
+## Use Cases
+
+### Multi-Sensor Fusion
+- Time-align LiDAR point clouds, camera frames, radar returns, and IMU data
+- Window JOIN with ±N ms tolerance for sensor clock drift compensation
+- Real-time fusion pipeline for online perception
+
+### Scenario Mining
+- SQL queries over petabytes of driving logs stored as Parquet on S3
+- Find specific scenarios: "all left turns at intersections with pedestrians in rain"
+- ASOF JOIN to correlate vehicle state with map/weather data
+
+### Training Data Pipeline
+- Query → NumPy → PyTorch in microseconds via zero-copy
+- Batch extraction via Arrow Flight for distributed training
+- Reproducible dataset versioning with Parquet snapshots
+
+---
+
+## Example: Multi-Sensor Alignment
+
+```sql
+-- Align all sensor streams to LiDAR timestamps
+SELECT
+    l.ts AS lidar_ts,
+    l.points,
+    c.frame AS camera_frame,
+    r.detections AS radar_detections,
+    i.accel_x, i.accel_y, i.accel_z,
+    i.yaw_rate,
+    g.lat, g.lon, g.heading
+FROM lidar_scans l
+ASOF JOIN camera_frames c ON l.vehicle_id = c.vehicle_id AND l.ts >= c.ts
+ASOF JOIN radar_returns r ON l.vehicle_id = r.vehicle_id AND l.ts >= r.ts
+ASOF JOIN imu_readings i ON l.vehicle_id = i.vehicle_id AND l.ts >= i.ts
+ASOF JOIN gps_fixes g ON l.vehicle_id = g.vehicle_id AND l.ts >= g.ts
+WHERE l.vehicle_id = 'vehicle-042'
+  AND l.ts BETWEEN '2026-03-15 14:00:00' AND '2026-03-15 14:30:00'
+```
+
+---
+
+## Architecture
+
+```
+Vehicle Edge Node              Cloud Cluster              Training
+─────────────────    ─────────────────────────    ─────────────────
+LiDAR      ──→  │                           │
+Camera     ──→  │ ZeptoDB Edge              │
+Radar      ──→  │   ↓ WAL + Parquet        │──→  S3 Parquet HDB
+IMU        ──→  │   ↓ Sync to cloud        │──→  ZeptoDB Cluster
+GPS        ──→  │                           │──→  Arrow Flight
+                 ─────────────────────────         ↓
+                                               PyTorch Training
+```

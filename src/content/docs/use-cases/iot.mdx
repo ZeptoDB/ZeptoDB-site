@@ -1,0 +1,82 @@
+---
+title: "Smart Factory & IoT"
+template: splash
+prev: false
+next: false
+description: "ZeptoDB for industrial IoT, predictive maintenance, and real-time anomaly detection"
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+10KHz sensor ingestion. Real-time anomaly detection. Predictive maintenance at microsecond latency.
+
+---
+
+## Why Manufacturers Choose ZeptoDB
+
+<CardGrid>
+  <Card title="10KHz+ Ingestion" icon="rocket">
+    Handle high-frequency vibration, temperature, and pressure sensors without data loss.
+  </Card>
+  <Card title="Real-Time Analytics" icon="seti:clock">
+    Window functions for rolling averages, anomaly detection, and threshold alerts — all in SQL.
+  </Card>
+  <Card title="Edge to Cloud" icon="star">
+    Run on edge nodes (ARM Graviton) or cloud clusters. Parquet HDB for long-term storage on S3.
+  </Card>
+  <Card title="OPC-UA Ready" icon="approve-check-circle">
+    Industrial protocol support for PLC and SCADA integration (roadmap).
+  </Card>
+</CardGrid>
+
+---
+
+## Use Cases
+
+### Predictive Maintenance
+- Ingest vibration, temperature, and current sensors at 10KHz+
+- Rolling statistics (EMA, stddev, percentiles) for drift detection
+- ASOF JOIN to correlate sensor anomalies with maintenance events
+
+### Quality Control
+- Real-time SPC (Statistical Process Control) with window functions
+- Detect out-of-spec measurements within microseconds
+- Historical analysis from Parquet HDB for root cause investigation
+
+### Energy Monitoring
+- Sub-second power consumption aggregation across facility
+- Peak demand detection and load balancing analytics
+- xbar time bucketing for shift/hourly/daily reports
+
+---
+
+## Example: Vibration Anomaly Detection
+
+```sql
+-- Detect anomalous vibration readings using rolling statistics
+SELECT
+    sensor_id,
+    ts,
+    vibration,
+    ema(vibration, 100) AS ema_100,
+    vibration - ema(vibration, 100) AS deviation
+FROM sensor_readings
+WHERE
+    ts > now() - interval '5 minutes'
+    AND abs(vibration - ema(vibration, 100)) > 3 * stddev(vibration)
+        OVER (PARTITION BY sensor_id ORDER BY ts ROWS 1000 PRECEDING)
+ORDER BY deviation DESC
+```
+
+---
+
+## Deployment Options
+
+| Environment | Configuration |
+|-------------|--------------|
+| Edge (single node) | ARM Graviton, 16GB RAM, local NVMe |
+| Factory floor cluster | 3-node cluster, 10GbE, shared Parquet on NAS |
+| Cloud (historical) | Multi-node on EKS, Parquet HDB on S3 |
+| Hybrid | Edge for real-time, cloud sync for analytics |
+
+See [Production Deployment](/ZeptoDB-site/deployment/production_deployment/) for details.

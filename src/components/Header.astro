@@ -20,42 +20,43 @@ try {
   }
 } catch {}
 
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const currentPath = Astro.url.pathname;
 
 const navLinks = [
   {
     label: 'Product',
-    href: '/features/',
+    href: `${base}/features/`,
     children: [
-      { label: 'Features', href: '/features/' },
-      { label: 'Benchmarks', href: '/benchmarks/' },
-      { label: 'Security', href: '/security/' },
-      { label: 'Integrations', href: '/integrations/' },
+      { label: 'Features', href: `${base}/features/` },
+      { label: 'Benchmarks', href: `${base}/benchmarks/` },
+      { label: 'Security', href: `${base}/security/` },
+      { label: 'Integrations', href: `${base}/integrations/` },
     ],
   },
   {
     label: 'Use Cases',
-    href: '/use-cases/trading/',
+    href: `${base}/use-cases/trading/`,
     children: [
-      { label: 'Trading & Finance', href: '/use-cases/trading/' },
-      { label: 'Physical AI & Robotics', href: '/use-cases/robotics/' },
-      { label: 'Smart Factory & IoT', href: '/use-cases/iot/' },
-      { label: 'Autonomous Vehicles', href: '/use-cases/autonomous-vehicles/' },
+      { label: 'Trading & Finance', href: `${base}/use-cases/trading/` },
+      { label: 'Physical AI & Robotics', href: `${base}/use-cases/robotics/` },
+      { label: 'Smart Factory & IoT', href: `${base}/use-cases/iot/` },
+      { label: 'Autonomous Vehicles', href: `${base}/use-cases/autonomous-vehicles/` },
     ],
   },
   {
     label: 'Compare',
-    href: '/compare/vs-kdb/',
+    href: `${base}/compare/vs-kdb/`,
     children: [
-      { label: 'vs kdb+', href: '/compare/vs-kdb/' },
-      { label: 'vs ClickHouse', href: '/compare/vs-clickhouse/' },
-      { label: 'vs InfluxDB', href: '/compare/vs-influxdb/' },
-      { label: 'vs TimescaleDB', href: '/compare/vs-timescaledb/' },
+      { label: 'vs kdb+', href: `${base}/compare/vs-kdb/` },
+      { label: 'vs ClickHouse', href: `${base}/compare/vs-clickhouse/` },
+      { label: 'vs InfluxDB', href: `${base}/compare/vs-influxdb/` },
+      { label: 'vs TimescaleDB', href: `${base}/compare/vs-timescaledb/` },
     ],
   },
-  { label: 'Docs', href: '/getting-started/quick_start/' },
-  { label: 'Pricing', href: '/pricing/' },
-  { label: 'Blog', href: '/blog/' },
+  { label: 'Docs', href: `${base}/getting-started/quick_start/` },
+  { label: 'Pricing', href: `${base}/pricing/` },
+  { label: 'Blog', href: `${base}/blog/` },
 ];
 
 function isActive(href: string) {

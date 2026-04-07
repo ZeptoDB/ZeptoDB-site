@@ -1,0 +1,56 @@
+---
+title: "Pricing"
+template: splash
+prev: false
+next: false
+description: "ZeptoDB pricing — open source core with enterprise support"
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+<CardGrid>
+  <Card title="Community" icon="open-book">
+    **Free & Open Source**
+
+    - Full engine: ingestion, query, ASOF JOIN, JIT
+    - Python zero-copy, C++ API, Arrow Flight
+    - SQL, HTTP, Feed Handlers
+    - Parquet HDB on S3
+    - Multi-node clustering
+    - Community support (GitHub Issues & Discussions)
+
+    [Get Started →](/ZeptoDB-site/getting-started/quick_start/)
+  </Card>
+  <Card title="Enterprise" icon="approve-check-circle">
+    **Contact Us**
+
+    Everything in Community, plus:
+
+    - Priority support with SLA
+    - Dedicated Slack channel
+    - Production deployment assistance
+    - Performance tuning consultation
+    - Custom feed handler development
+    - SSO/OIDC integration support
+    - Compliance guidance (SOC2, MiFID II)
+    - Long-term support (LTS) releases
+
+    [Contact Sales →](/ZeptoDB-site/contact/)
+  </Card>
+</CardGrid>
+
+---
+
+## FAQ
+
+**Is ZeptoDB really free?**
+Yes. The full engine is open source under Apache 2.0. No feature gating, no usage limits, no license keys.
+
+**What does Enterprise include?**
+Priority support, SLA, deployment assistance, and consulting. The software is the same — you're paying for expertise and guaranteed response times.
+
+**Can I use ZeptoDB in production without Enterprise?**
+Absolutely. Many teams run ZeptoDB in production with community support. Enterprise is for teams that need guaranteed SLAs and hands-on help.
+
+**Do you offer managed cloud hosting?**
+Not yet. It's on our roadmap. For now, see our [Production Deployment](/ZeptoDB-site/deployment/production_deployment/) and [Kubernetes Operations](/ZeptoDB-site/operations/kubernetes_operations/) guides.

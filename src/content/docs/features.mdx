@@ -1,0 +1,108 @@
+---
+title: "Features"
+template: splash
+prev: false
+next: false
+description: "ZeptoDB features — ultra-low latency time-series database"
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+## Ingestion Engine
+
+<CardGrid>
+  <Card title="5.52M events/sec" icon="rocket">
+    Lock-free MPMC ring buffer with Highway SIMD batch copy. Zero allocation on the hot path.
+  </Card>
+  <Card title="Feed Handlers" icon="star">
+    Built-in parsers for FIX 4.4, ITCH, Binance WebSocket, and Kafka. Plug in custom feeds via C++ API.
+  </Card>
+  <Card title="WAL" icon="approve-check-circle">
+    Write-ahead log for crash recovery. Configurable sync policy (every write, periodic, or async).
+  </Card>
+</CardGrid>
+
+---
+
+## Query Engine
+
+<CardGrid>
+  <Card title="LLVM JIT" icon="seti:clock">
+    Queries compiled to native code at runtime. Vectorized execution with SIMD aggregation.
+  </Card>
+  <Card title="ASOF JOIN" icon="star">
+    Point-in-time correct joins for financial and sensor data. Nanosecond precision.
+  </Card>
+  <Card title="Window JOIN" icon="star">
+    Join within a time window (±N ms). Essential for sensor fusion and event correlation.
+  </Card>
+  <Card title="Built-in Analytics" icon="rocket">
+    EMA, VWAP, xbar, mavg, percentile — temporal analytics functions built into the engine.
+  </Card>
+  <Card title="Standard SQL" icon="approve-check-circle">
+    Full SQL support: SELECT, JOIN, GROUP BY, window functions, subqueries, CTEs.
+  </Card>
+</CardGrid>
+
+---
+
+## Storage
+
+| Feature | Description |
+|---------|-------------|
+| In-Memory Column Store | Columnar layout optimized for SIMD scan and aggregation |
+| Arena Allocator | Custom memory management — no malloc on hot path |
+| Partition Manager | Symbol-based partitioning for data locality |
+| Parquet HDB | Historical database on S3/NFS. Query hot + cold data transparently |
+| Compression | LZ4 for WAL, Parquet columnar compression for HDB |
+
+---
+
+## Client APIs
+
+| API | Latency | Use Case |
+|-----|---------|----------|
+| Python (zero-copy) | 522ns | Quant research, ML pipelines, Jupyter notebooks |
+| C++ Pipeline | Native | Embedded, low-latency applications |
+| HTTP REST | ~1ms | Web apps, microservices, Grafana |
+| Arrow Flight | ~100μs | Batch data transfer, distributed training |
+| SQL (CLI) | Interactive | Ad-hoc queries, debugging |
+
+---
+
+## Security
+
+- TLS 1.3 with optional mTLS
+- RBAC with 5 built-in roles (admin, writer, reader, analyst, monitor)
+- JWT / OIDC authentication (Okta, Auth0, Azure AD, Google)
+- API key management with rotation
+- Audit logging (all auth events, queries, admin actions)
+- Rate limiting per user/role
+- Multi-tenancy with namespace isolation
+- SOC2 & MiFID II compliance ready
+
+See the [Security Operations Guide](/ZeptoDB-site/api/security_operations_guide/) for details.
+
+---
+
+## Clustering
+
+- Multi-node with automatic sharding by symbol
+- Consistent hashing for partition placement
+- Health monitoring and automatic failover
+- Rolling upgrades with zero downtime
+- Cross-node query routing and aggregation
+
+See [Multi-Node Cluster](/ZeptoDB-site/deployment/multi_node_cluster/) for setup.
+
+---
+
+## Deployment
+
+- Docker (single command start)
+- Kubernetes / Helm
+- Bare metal with NUMA/CPU pinning optimization
+- ARM Graviton support (aarch64)
+- Parquet HDB on S3, GCS, or local NFS
+
+See [Production Deployment](/ZeptoDB-site/deployment/production_deployment/) for details.

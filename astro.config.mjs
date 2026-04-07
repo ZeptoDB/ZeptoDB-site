@@ -4,6 +4,7 @@ import starlight from '@astrojs/starlight';
 
 export default defineConfig({
   site: 'https://zeptodb.github.io',
+  base: '/ZeptoDB-site/',
   integrations: [
     starlight({
       title: 'ZeptoDB',

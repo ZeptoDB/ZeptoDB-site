@@ -1,15 +1,73 @@
 ---
-title: ZeptoDB Documentation
-description: Ultra-low latency time-series database for financial markets and IoT
+title: ZeptoDB
+description: Ultra-low latency in-memory time-series database
 template: splash
 hero:
-  tagline: Nanosecond-scale time-series database built for financial markets, IoT, and Physical AI
+  tagline: "Built for Quants. Ready for Everything. Ultra-low latency in-memory time-series database — from trading desks to factory floors, wherever μs matters."
   actions:
-    - text: Getting Started
-      link: /getting-started/quick_start/
+    - text: Quick Start
+      link: /ZeptoDB-site/getting-started/quick_start/
       icon: right-arrow
-      variant: primary
-    - text: API Reference
-      link: /api/sql_reference/
+    - text: GitHub
+      link: https://github.com/zeptodb/zeptodb
+      icon: external
       variant: minimal
 ---
+
+import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+<CardGrid stagger>
+  <Card title="5.52M events/sec" icon="rocket">
+    Production-grade ingestion powered by lock-free MPMC ring buffer + Highway SIMD.
+  </Card>
+  <Card title="272μs query (1M rows)" icon="seti:clock">
+    LLVM JIT compiled execution. ASOF JOIN, Window JOIN, EMA — all at μs latency.
+  </Card>
+  <Card title="522ns Python zero-copy" icon="seti:python">
+    NumPy/Pandas view directly from engine memory. No serialization, no copy.
+  </Card>
+  <Card title="Enterprise Security" icon="approve-check-circle">
+    TLS 1.3, RBAC (5 roles), JWT/OIDC, audit log. SOC2 & MiFID II ready.
+  </Card>
+</CardGrid>
+
+## Why ZeptoDB?
+
+| | **kdb+** | **ClickHouse** | **InfluxDB** | **ZeptoDB** |
+|---|---|---|---|---|
+| **Latency** | μs | ms | ms | **μs** |
+| **Ingestion** | ~5M/sec | 100K/sec | 50K/sec | **5.52M/sec** |
+| **SQL** | ✗ (q lang) | ✓ | InfluxQL | **✓ Standard SQL** |
+| **Python** | IPC | — | — | **522ns zero-copy** |
+| **ASOF JOIN** | ✓ | ✗ | ✗ | **✓** |
+| **License** | $100K+/yr | OSS | OSS | **OSS** |
+
+See detailed comparisons: [vs kdb+](/ZeptoDB-site/compare/vs-kdb/) · [vs ClickHouse](/ZeptoDB-site/compare/vs-clickhouse/) · [vs InfluxDB](/ZeptoDB-site/compare/vs-influxdb/) · [vs TimescaleDB](/ZeptoDB-site/compare/vs-timescaledb/)
+
+## Use Cases
+
+<CardGrid>
+  <Card title="📈 Trading & Finance" icon="star">
+    HFT tick processing, quant backtesting, risk/compliance. kdb+ performance at zero license cost.
+  </Card>
+  <Card title="🤖 Physical AI & Robotics" icon="star">
+    Sensor fusion, RL feature store, zero-copy PyTorch pipeline. 522ns to tensor.
+  </Card>
+  <Card title="🏭 Smart Factory" icon="star">
+    10KHz sensor ingestion, real-time anomaly detection, predictive maintenance.
+  </Card>
+  <Card title="🚗 Autonomous Vehicles" icon="star">
+    LiDAR + Camera + IMU time sync via ASOF JOIN. Driving log replay from Parquet HDB.
+  </Card>
+</CardGrid>
+
+<LinkCard title="Explore all use cases →" href="/ZeptoDB-site/use-cases/trading/" />
+
+## Get Started
+
+<CardGrid>
+  <LinkCard title="Quick Start" description="From zero to first query in 5 minutes" href="/ZeptoDB-site/getting-started/quick_start/" />
+  <LinkCard title="Features" description="Full feature overview" href="/ZeptoDB-site/features/" />
+  <LinkCard title="Benchmarks" description="Reproducible performance numbers" href="/ZeptoDB-site/benchmarks/" />
+  <LinkCard title="Pricing" description="Free & open source with enterprise support" href="/ZeptoDB-site/pricing/" />
+</CardGrid>

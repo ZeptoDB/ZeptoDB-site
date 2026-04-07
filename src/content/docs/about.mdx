@@ -1,0 +1,58 @@
+---
+title: "About ZeptoDB"
+template: splash
+prev: false
+next: false
+description: "The story behind ZeptoDB — ultra-low latency time-series for everyone"
+---
+
+## Mission
+
+Make microsecond-latency time-series analytics accessible to every team — not just those with $100K+ database budgets.
+
+---
+
+## Why We Built ZeptoDB
+
+The time-series database market has a gap:
+
+- **kdb+** delivers microsecond performance but costs $100K+/year and requires learning a proprietary language (q)
+- **ClickHouse, TimescaleDB, InfluxDB** are affordable but operate at millisecond latency — 100-1000x slower for real-time workloads
+- **None** offer zero-copy Python integration for ML pipelines
+
+ZeptoDB closes this gap: kdb+-class performance, standard SQL, Python zero-copy, open source.
+
+---
+
+## Technical Philosophy
+
+- **Zero-copy everywhere** — data flows from network to column store to Python without copying
+- **LLVM JIT** — queries compile to native code, not interpreted
+- **SIMD-first** — Highway library for portable AVX2/512/NEON vectorization
+- **Lock-free ingestion** — MPMC ring buffer, no mutex on the hot path
+- **SQL, not DSL** — standard SQL with temporal extensions (ASOF JOIN, xbar, EMA)
+
+---
+
+## Tech Stack
+
+| Component | Technology |
+|-----------|-----------|
+| Language | C++20 |
+| Compiler | Clang 19 |
+| JIT | LLVM 19 |
+| SIMD | Google Highway |
+| Build | CMake + Ninja |
+| Python | pybind11 (zero-copy NumPy) |
+| Serialization | Apache Arrow / Parquet |
+| Networking | io_uring (Linux) |
+| TLS | OpenSSL 3.x |
+
+---
+
+## Contact
+
+- GitHub: [github.com/zeptodb/zeptodb](https://github.com/zeptodb/zeptodb)
+- Issues: [github.com/zeptodb/zeptodb/issues](https://github.com/zeptodb/zeptodb/issues)
+- Discussions: [github.com/zeptodb/zeptodb/discussions](https://github.com/zeptodb/zeptodb/discussions)
+- Enterprise inquiries: *contact@zeptodb.com* (placeholder)

@@ -104,20 +104,32 @@ async function main() {
   // We re-create from scratch each time, but restore manual files after
   const manualDir = join(import.meta.dirname, '..', 'src', 'content', 'docs-manual');
   // Save manual files
-  for (const f of ['index.mdx']) {
+  const manualEntries = [
+    'index.mdx', 'features.mdx', 'pricing.mdx', 'integrations.mdx',
+    'security.mdx', 'community.mdx', 'about.mdx', 'contact.md',
+  ];
+  const manualDirs = ['use-cases', 'compare', 'benchmarks', 'blog'];
+  for (const f of manualEntries) {
     const src = join(DEST, f);
     if (existsSync(src)) {
       await mkdir(manualDir, { recursive: true });
       await cp(src, join(manualDir, f));
     }
   }
+  for (const d of manualDirs) {
+    const src = join(DEST, d);
+    if (existsSync(src)) {
+      await mkdir(manualDir, { recursive: true });
+      await cp(src, join(manualDir, d), { recursive: true });
+    }
+  }
   if (existsSync(DEST)) await rm(DEST, { recursive: true });
   await mkdir(DEST, { recursive: true });
   // Restore manual files
   if (existsSync(manualDir)) {
-    const entries = await readdir(manualDir);
-    for (const f of entries) {
-      await cp(join(manualDir, f), join(DEST, f));
+    const entries = await readdir(manualDir, { withFileTypes: true });
+    for (const entry of entries) {
+      await cp(join(manualDir, entry.name), join(DEST, entry.name), { recursive: entry.isDirectory() });
     }
     await rm(manualDir, { recursive: true });
   }

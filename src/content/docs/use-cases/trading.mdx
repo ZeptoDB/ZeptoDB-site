@@ -1,0 +1,100 @@
+---
+title: "Trading & Finance"
+template: splash
+prev: false
+next: false
+description: "ZeptoDB for HFT, quant research, and financial compliance"
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+kdb+ performance. Standard SQL. Zero license cost.
+
+---
+
+## Why Trading Firms Choose ZeptoDB
+
+<CardGrid>
+  <Card title="5.52M events/sec" icon="rocket">
+    Lock-free MPMC ring buffer ingests full-depth L2 order book feeds without dropping a tick.
+  </Card>
+  <Card title="272μs queries" icon="seti:clock">
+    LLVM JIT compiled execution — ASOF JOIN, VWAP, EMA at microsecond latency.
+  </Card>
+  <Card title="522ns Python" icon="seti:python">
+    Zero-copy NumPy/Pandas views for quant notebooks. No serialization overhead.
+  </Card>
+  <Card title="kdb+ compatible" icon="approve-check-circle">
+    ASOF JOIN, Window JOIN, xbar — familiar temporal operations, standard SQL syntax.
+  </Card>
+</CardGrid>
+
+---
+
+## Use Cases
+
+### High-Frequency Trading
+- Real-time tick ingestion from FIX 4.4, ITCH, and exchange WebSocket feeds
+- Sub-microsecond event timestamping with nanosecond precision columns
+- Lock-free pipeline: feed handler → ring buffer → column store → query
+
+### Quant Research & Backtesting
+- Python zero-copy: query result → NumPy array in 522ns
+- ASOF JOIN for point-in-time correct backtests
+- Parquet HDB for historical data on S3 — query decades of tick data
+
+### Risk & Compliance
+- Real-time P&L aggregation with window functions
+- Audit logging for MiFID II / SOC2 compliance
+- RBAC with 5 roles — isolate trading desks from compliance views
+
+---
+
+## Architecture for Trading
+
+```
+Market Data Feeds          ZeptoDB                    Consumers
+─────────────────    ─────────────────────    ─────────────────
+FIX 4.4        ──→  │ Feed Handler        │
+ITCH           ──→  │   ↓                 │
+Binance WS     ──→  │ Ring Buffer (MPMC)  │──→  Python (522ns)
+Kafka          ──→  │   ↓                 │──→  SQL (HTTP/Flight)
+                     │ Column Store        │──→  C++ Pipeline
+                     │   ↓                 │──→  Grafana
+                     │ Parquet HDB (S3)    │
+                     ─────────────────────
+```
+
+---
+
+## Example: Real-Time VWAP with ASOF JOIN
+
+```sql
+-- Join trades with latest quote at each trade timestamp
+SELECT
+    t.sym,
+    t.ts,
+    t.price,
+    t.size,
+    q.bid, q.ask,
+    xbar(1m, t.ts) AS bucket,
+    vwap(t.price, t.size) OVER (PARTITION BY t.sym ORDER BY t.ts ROWS 100 PRECEDING) AS vwap_100
+FROM trades t
+ASOF JOIN quotes q ON t.sym = q.sym AND t.ts >= q.ts
+WHERE t.ts > now() - interval '1 hour'
+```
+
+---
+
+## Migration from kdb+
+
+Already running kdb+? ZeptoDB supports the same temporal operations with standard SQL:
+
+| kdb+ | ZeptoDB SQL |
+|------|-------------|
+| `aj[\`sym\`time; trades; quotes]` | `trades ASOF JOIN quotes ON sym, ts` |
+| `xbar[0D00:01; time]` | `xbar(1m, ts)` |
+| `ema[20; price]` | `ema(price, 20)` |
+| `mavg[50; price]` | `mavg(price, 50)` |
+
+See the [Migration Guide](/ZeptoDB-site/getting-started/quick_start/) to get started.
